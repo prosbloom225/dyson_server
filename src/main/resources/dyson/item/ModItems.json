@@ -1,0 +1,28 @@
+[
+    {
+        "name" : "testModItem0",
+        "id" : 10,
+        "type" : "WEAPON",
+        "ilvl" : 1,
+        "emcVal" : 7.7,
+        "ap" : 7
+    },
+    {
+        "name" : "testModItem1",
+        "id" : 11,
+        "type" : "ARMOR",
+        "ilvl" : 5,
+        "emcVal" : 33.0,
+        "pv" : 2.1,
+        "dv" : 6.6
+    },
+    {
+        "name" : "testModItem2",
+        "id" : 12,
+        "type" : "ARMOR",
+        "ilvl" : 5,
+        "emcVal" : 35.0,
+        "pv" : 7,
+        "dv" : 6.6
+    }
+]
