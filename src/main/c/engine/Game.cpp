@@ -1,8 +1,9 @@
 #include "Game.h"
 
+typedef std::chrono::high_resolution_clock Clock;
+
 BaseMod Game::mods[1];
 std::vector<IAction*> Game::stack;
-
 
 Game::Game() {
     // TODO - dynamic modloader
@@ -13,6 +14,7 @@ Game::Game() {
     }
     loader();
     // TODO - pregame menu/etc .. maybe move to main?
+    Game::tickrate = 1/TICKS_PER_SEC;
     // start the game loop
     lifecycle();
 
@@ -40,12 +42,15 @@ void Game::loader() {
 
 void Game::lifecycle() {
     // main game loop
+    tick = 0;
     while (true){
+        // clock stuff
+        /* auto clock = Clock::now(); */
+        TimeUtils::startClock();
         tick++;
-        LOG(INFO) << tick%TIME_SCALER;
-        if (tick%TIME_SCALER == 0){
-            LOG(INFO)<<"TICK: " << tick;
-        }
+        LOG(INFO) << tick;
+
+        /*
         char a;
         std::cin >> a;
         // q
@@ -53,6 +58,8 @@ void Game::lifecycle() {
             break;
         else 
             std::cout << (int)a;
+        */
+
         // world server tick
         // world server actions tick
         for (auto &action : Game::stack){
@@ -61,8 +68,36 @@ void Game::lifecycle() {
         // world server entities tick
         // updateTrackedEntities - dead/alive,garbage collection,etc
 
-        // sanity
-        if (tick > 20)
-            break;
+        // TODO - MOVE to TimeUtils.h
+        // sync with clock
+        std::chrono::duration<double> diff = Clock::now() - clock;
+        /*
+        while (diff.count() < tickrate){
+            std::this_thread::sleep_for(std::chrono::milliseconds(TIME_WAIT));
+            diff = Clock::now() - clock;
+        }
+        */
+        TimeUtils::waitForClock();
+
+        LOG(INFO) << "Calculated TPS: ";
+        LOG(INFO) << "DIFF: " << diff.count();
+        LOG(INFO) << "TICK: " << tick;
+
+        tps_history[tick] = diff.count();
+
+        if (tick >= TICKS_PER_SEC) {
+            LOG(INFO) << "lifecycle complete";
+            LOG(INFO) << "OPTIMAL TICKRATE: " << tickrate;
+            LOG(INFO) << "TICK" << tick;
+            double sum;
+            int i = 0;
+            while (i < tick)  {
+                sum += tps_history[i];
+                i++;
+            }
+            LOG(INFO) << "Average TPS: " << (sum/--i);
+            tick = 0;
+            return;
+        }
     };
 }
