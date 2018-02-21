@@ -14,7 +14,6 @@ Game::Game() {
     }
     loader();
     // TODO - pregame menu/etc .. maybe move to main?
-    Game::tickrate = 1/TICKS_PER_SEC;
     // start the game loop
     lifecycle();
 
@@ -42,13 +41,10 @@ void Game::loader() {
 
 void Game::lifecycle() {
     // main game loop
-    tick = 0;
+    TimeUtils tu = TimeUtils();
     while (true){
         // clock stuff
-        /* auto clock = Clock::now(); */
-        TimeUtils::startClock();
-        tick++;
-        LOG(INFO) << tick;
+        tu.startClock();
 
         /*
         char a;
@@ -68,35 +64,14 @@ void Game::lifecycle() {
         // world server entities tick
         // updateTrackedEntities - dead/alive,garbage collection,etc
 
-        // TODO - MOVE to TimeUtils.h
-        // sync with clock
-        std::chrono::duration<double> diff = Clock::now() - clock;
-        /*
-        while (diff.count() < tickrate){
-            std::this_thread::sleep_for(std::chrono::milliseconds(TIME_WAIT));
-            diff = Clock::now() - clock;
-        }
-        */
-        TimeUtils::waitForClock();
+        // sync
+        tu.waitForClock();
 
-        LOG(INFO) << "Calculated TPS: ";
-        LOG(INFO) << "DIFF: " << diff.count();
-        LOG(INFO) << "TICK: " << tick;
 
-        tps_history[tick] = diff.count();
-
-        if (tick >= TICKS_PER_SEC) {
+        if (tu.getTick() >= TOTAL_TICKS) {
             LOG(INFO) << "lifecycle complete";
-            LOG(INFO) << "OPTIMAL TICKRATE: " << tickrate;
-            LOG(INFO) << "TICK" << tick;
-            double sum;
-            int i = 0;
-            while (i < tick)  {
-                sum += tps_history[i];
-                i++;
-            }
-            LOG(INFO) << "Average TPS: " << (sum/--i);
-            tick = 0;
+            LOG(INFO) << "TICK: " << tu.getTick();
+            tu.getAvgTps(10);
             return;
         }
     };

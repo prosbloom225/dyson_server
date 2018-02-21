@@ -19,12 +19,8 @@ class Game {
         static std::vector<IAction*> stack;
 
     private:
-        const double TICKS_PER_SEC = 10;
+        const double TOTAL_TICKS = 10;
         /* static const signed int TIME_SCALER = 1; */
-        const signed int TIME_WAIT = 100;  //ms to wait at end of tick to sync to clock
-        double tps_history[10];
-        double tickrate;
-        unsigned int tick;
         void lifecycle();
         void loader();
 };
