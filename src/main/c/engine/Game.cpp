@@ -1,8 +1,9 @@
 #include "Game.h"
 
+typedef std::chrono::high_resolution_clock Clock;
+
 BaseMod Game::mods[1];
 std::vector<IAction*> Game::stack;
-
 
 Game::Game() {
     // TODO - dynamic modloader
@@ -41,11 +42,10 @@ void Game::loader() {
 void Game::lifecycle() {
     // main game loop
     while (true){
-        tick++;
-        LOG(INFO) << tick%TIME_SCALER;
-        if (tick%TIME_SCALER == 0){
-            LOG(INFO)<<"TICK: " << tick;
-        }
+        // clock stuff
+        TimeUtils::startClock();
+
+        /*
         char a;
         std::cin >> a;
         // q
@@ -53,6 +53,8 @@ void Game::lifecycle() {
             break;
         else 
             std::cout << (int)a;
+        */
+
         // world server tick
         // world server actions tick
         for (auto &action : Game::stack){
@@ -61,8 +63,15 @@ void Game::lifecycle() {
         // world server entities tick
         // updateTrackedEntities - dead/alive,garbage collection,etc
 
-        // sanity
-        if (tick > 20)
-            break;
+        // sync
+        TimeUtils::waitForClock();
+
+
+        if (TimeUtils::getTick() >= TOTAL_TICKS) {
+            LOG(INFO) << "lifecycle complete";
+            LOG(INFO) << "TICK: " << TimeUtils::getTick();
+            TimeUtils::getAvgTps(10);
+            return;
+        }
     };
 }
