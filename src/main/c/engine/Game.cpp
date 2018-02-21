@@ -1,14 +1,15 @@
 #include "Game.h"
 
-typedef std::chrono::high_resolution_clock Clock;
+/* typedef std::chrono::high_resolution_clock Clock; */
 
-BaseMod Game::mods[1];
+BaseMod Game::mods[2];
 std::vector<IAction*> Game::stack;
 
 Game::Game() {
     // TODO - dynamic modloader
     // hardcoding mods for now
     mods[0] = BaseMod();
+    mods[1] = DysonMod();
     for (auto& mod : mods) {
         LOG(DEBUG) << "Loading mod: " << mod.getModName();
     }

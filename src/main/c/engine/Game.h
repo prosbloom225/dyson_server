@@ -8,6 +8,9 @@
 
 #include "engine/util/TimeUtils.h"
 
+
+#include "dyson/DysonMod.h"
+
 #include <chrono>
 #include <thread>
 
@@ -15,7 +18,7 @@ class Game {
     public:
         Game();
         static ItemRegistry registry;
-        static BaseMod mods[1];
+        static BaseMod mods[2];
         static std::vector<IAction*> stack;
 
     private:

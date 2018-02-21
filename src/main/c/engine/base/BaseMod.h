@@ -5,7 +5,7 @@
 #include "Items.h"
 
 class BaseMod {
-    private:
+    protected:
         const char* modName = "base";
     public:
         void preInit();
