@@ -41,10 +41,9 @@ void Game::loader() {
 
 void Game::lifecycle() {
     // main game loop
-    TimeUtils tu = TimeUtils();
     while (true){
         // clock stuff
-        tu.startClock();
+        TimeUtils::startClock();
 
         /*
         char a;
@@ -65,13 +64,13 @@ void Game::lifecycle() {
         // updateTrackedEntities - dead/alive,garbage collection,etc
 
         // sync
-        tu.waitForClock();
+        TimeUtils::waitForClock();
 
 
-        if (tu.getTick() >= TOTAL_TICKS) {
+        if (TimeUtils::getTick() >= TOTAL_TICKS) {
             LOG(INFO) << "lifecycle complete";
-            LOG(INFO) << "TICK: " << tu.getTick();
-            tu.getAvgTps(10);
+            LOG(INFO) << "TICK: " << TimeUtils::getTick();
+            TimeUtils::getAvgTps(10);
             return;
         }
     };

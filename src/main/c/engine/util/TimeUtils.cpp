@@ -1,15 +1,20 @@
 #include "TimeUtils.h"
 
 
+signed int TimeUtils::tick;
+std::chrono::time_point<std::chrono::high_resolution_clock> TimeUtils::start;
+double TimeUtils::tps_history[10]; // TODO - this should be dynamic or set in config
+const signed int TimeUtils::TIME_WAIT = 10;  // ms to wait at end of tick to sync to clock
+
+
+
+
 int TimeUtils::getTick() {
     return tick;
 }
 void TimeUtils::startClock() {
     LOG(INFO) << "Starting clock";
     start = std::chrono::high_resolution_clock::now();
-}
-
-void TimeUtils::stopClock() {
 }
 
 void TimeUtils::waitForClock(){
@@ -25,7 +30,7 @@ void TimeUtils::waitForClock(){
     LOG(INFO) << "TICK: " << tick << " - Time: " << diff.count();
     tps_history[tick] = diff.count();
     tick++;
-    LOG(INFO) << "Wait complete!";
+    /* LOG(INFO) << "Wait complete!"; */
 }
 
 double TimeUtils::getAvgTps(int ticks) {
